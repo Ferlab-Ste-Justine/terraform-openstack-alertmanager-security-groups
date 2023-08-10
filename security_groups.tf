@@ -17,13 +17,23 @@ resource "openstack_networking_secgroup_rule_v2" "alertmanager_member_outgoing_v
   security_group_id = openstack_networking_secgroup_v2.alertmanager_member.id
 }
 
-//Allow port 9093 traffic from other members
+//Allow port 9093 and 9094 traffic from other members
 resource "openstack_networking_secgroup_rule_v2" "peer_alertmanager_access" {
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
   port_range_min    = 9093
   port_range_max    = 9093
+  remote_group_id  = openstack_networking_secgroup_v2.alertmanager_member.id
+  security_group_id = openstack_networking_secgroup_v2.alertmanager_member.id
+}
+
+resource "openstack_networking_secgroup_rule_v2" "peer_alertmanager_cluster_access" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 9094
+  port_range_max    = 9094
   remote_group_id  = openstack_networking_secgroup_v2.alertmanager_member.id
   security_group_id = openstack_networking_secgroup_v2.alertmanager_member.id
 }
